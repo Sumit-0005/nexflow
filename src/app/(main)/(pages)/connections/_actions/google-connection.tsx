@@ -1,7 +1,6 @@
 'use server'
-import clerk from '@clerk/clerk-sdk-node'
-import { auth } from '@clerk/nextjs'
 import { google } from 'googleapis'
+import { getAuth, getClerkClient } from '@/lib/auth'
 
 export const getFileMetaData = async () => {
   'use server'
@@ -11,10 +10,15 @@ export const getFileMetaData = async () => {
     process.env.OAUTH2_REDIRECT_URI
   )
 
-  const { userId } = auth()
+  const { userId } = getAuth()
 
   if (!userId) {
     return { message: 'User not found' }
+  }
+
+  const clerk = getClerkClient()
+  if (!clerk) {
+    return { message: 'Clerk client unavailable in bypass mode' }
   }
 
   const clerkResponse = await clerk.users.getUserOauthAccessToken(

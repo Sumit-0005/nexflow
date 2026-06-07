@@ -1,7 +1,7 @@
 import { CONNECTIONS } from '@/lib/constant'
 import React from 'react'
 import ConnectionCard from './_components/connection-card'
-import { currentUser } from '@clerk/nextjs'
+import { getCurrentUser } from '@/lib/auth'
 import { onDiscordConnect } from './_actions/discord-connection'
 import { onNotionConnect } from './_actions/notion-connection'
 import { onSlackConnect } from './_actions/slack-connection'
@@ -52,7 +52,7 @@ const Connections = async (props: Props) => {
     team_name: '',
   }
 
-  const user = await currentUser()
+  const user = await getCurrentUser()
   if (!user) return null
 
   const onUserConnections = async () => {

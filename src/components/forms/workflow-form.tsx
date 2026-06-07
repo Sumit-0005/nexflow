@@ -48,7 +48,7 @@ const Workflowform = ({ subTitle, title }: Props) => {
   const handleSubmit = async (values: z.infer<typeof WorkflowFormSchema>) => {
     const workflow = await onCreateWorkflow(values.name, values.description)
     if (workflow) {
-      toast.message(workflow.message)
+      toast.message(typeof workflow === 'string' ? workflow : String(workflow.message || ''))
       router.refresh()
     }
     setClose()

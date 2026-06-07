@@ -8,31 +8,41 @@ export const onCreateNodesEdges = async (
   edges: string,
   flowPath: string
 ) => {
-  const flow = await db.workflows.update({
-    where: {
-      id: flowId,
-    },
-    data: {
-      nodes,
-      edges,
-      flowPath: flowPath,
-    },
-  })
+  try {
+    const flow = await db.workflows.update({
+      where: {
+        id: flowId,
+      },
+      data: {
+        nodes,
+        edges,
+        flowPath: flowPath,
+      },
+    })
 
-  if (flow) return { message: 'flow saved' }
+    if (flow) return { message: 'flow saved' }
+  } catch (error) {
+    console.error('[CREATE_NODES_EDGES_DB_ERROR]', error)
+    return { message: 'Database connection failed' }
+  }
 }
 
 export const onFlowPublish = async (workflowId: string, state: boolean) => {
   console.log(state)
-  const published = await db.workflows.update({
-    where: {
-      id: workflowId,
-    },
-    data: {
-      publish: state,
-    },
-  })
+  try {
+    const published = await db.workflows.update({
+      where: {
+        id: workflowId,
+      },
+      data: {
+        publish: state,
+      },
+    })
 
-  if (published.publish) return 'Workflow published'
-  return 'Workflow unpublished'
+    if (published.publish) return 'Workflow published'
+    return 'Workflow unpublished'
+  } catch (error) {
+    console.error('[PUBLISH_FLOW_DB_ERROR]', error)
+    return 'Failed to publish workflow'
+  }
 }

@@ -25,7 +25,7 @@ const Workflow = ({ description, id, name, publish }: Props) => {
       id,
       event.target.ariaChecked === 'false'
     )
-    if (response) toast.message(response)
+    if (response) toast.message(typeof response === 'string' ? response : String(response))
   }
 
   return (

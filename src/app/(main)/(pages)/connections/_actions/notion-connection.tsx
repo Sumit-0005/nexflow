@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from '@/lib/db'
-import { currentUser } from '@clerk/nextjs'
+import { getCurrentUser } from '@/lib/auth'
 import { Client } from '@notionhq/client'
 
 export const onNotionConnect = async (
@@ -14,51 +14,58 @@ export const onNotionConnect = async (
 ) => {
   'use server'
   if (access_token) {
-    //check if notion is connected
-    const notion_connected = await db.notion.findFirst({
-      where: {
-        accessToken: access_token,
-      },
-      include: {
-        connections: {
-          select: {
-            type: true,
-          },
-        },
-      },
-    })
-
-    if (!notion_connected) {
-      //create connection
-      await db.notion.create({
-        data: {
-          userId: id,
-          workspaceIcon: workspace_icon!,
+    try {
+      const notion_connected = await db.notion.findFirst({
+        where: {
           accessToken: access_token,
-          workspaceId: workspace_id!,
-          workspaceName: workspace_name!,
-          databaseId: database_id,
+        },
+        include: {
           connections: {
-            create: {
-              userId: id,
-              type: 'Notion',
+            select: {
+              type: true,
             },
           },
         },
       })
+
+      if (!notion_connected) {
+        await db.notion.create({
+          data: {
+            userId: id,
+            workspaceIcon: workspace_icon!,
+            accessToken: access_token,
+            workspaceId: workspace_id!,
+            workspaceName: workspace_name!,
+            databaseId: database_id,
+            connections: {
+              create: {
+                userId: id,
+                type: 'Notion',
+              },
+            },
+          },
+        })
+      }
+    } catch (error) {
+      console.error('[NOTION_CONNECT_DB_ERROR]', error)
     }
   }
 }
 export const getNotionConnection = async () => {
-  const user = await currentUser()
+  const user = await getCurrentUser()
   if (user) {
-    const connection = await db.notion.findFirst({
-      where: {
-        userId: user.id,
-      },
-    })
-    if (connection) {
-      return connection
+    try {
+      const connection = await db.notion.findFirst({
+        where: {
+          userId: user.id,
+        },
+      })
+      if (connection) {
+        return connection
+      }
+    } catch (error) {
+      console.error('[NOTION_GET_DB_ERROR]', error)
+      return null
     }
   }
 }

@@ -52,7 +52,8 @@ export async function POST(req: NextRequest) {
               }
             }
             if (flowPath[current] == 'Slack') {
-              const channels = flow.slackChannels.map((channel) => {
+              const slackChannels: string[] = JSON.parse(flow.slackChannels)
+              const channels = slackChannels.map((channel) => {
                 return {
                   label: '',
                   value: channel,

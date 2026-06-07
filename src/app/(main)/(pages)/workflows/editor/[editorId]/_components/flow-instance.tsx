@@ -28,12 +28,12 @@ const FlowInstance = ({ children, edges, nodes }: Props) => {
       JSON.stringify(isFlow)
     )
 
-    if (flow) toast.message(flow.message)
+    if (flow) toast.message(typeof flow === 'string' ? flow : String(flow.message || ''))
   }, [nodeConnection])
 
   const onPublishWorkflow = useCallback(async () => {
     const response = await onFlowPublish(pathname.split('/').pop()!, true)
-    if (response) toast.message(response)
+    if (response) toast.message(typeof response === 'string' ? response : String(response))
   }, [])
 
   const onAutomateFlow = async () => {

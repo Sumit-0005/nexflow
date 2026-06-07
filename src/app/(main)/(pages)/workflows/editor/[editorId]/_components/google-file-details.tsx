@@ -36,7 +36,7 @@ const GoogleFileDetails = ({ gFile, nodeConnection, title }: Props) => {
             >
               {detail}:{' '}
               <CardDescription className="text-black">
-                {gFile[detail]}
+                {typeof gFile[detail] === 'string' ? gFile[detail] : JSON.stringify(gFile[detail])}
               </CardDescription>
             </div>
           ))}

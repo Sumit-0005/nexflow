@@ -2,7 +2,7 @@
 
 import { Option } from '@/components/ui/multiple-selector'
 import { db } from '@/lib/db'
-import { currentUser } from '@clerk/nextjs'
+import { getCurrentUser } from '@/lib/auth'
 import axios from 'axios'
 
 export const onSlackConnect = async (
@@ -17,36 +17,45 @@ export const onSlackConnect = async (
 ): Promise<void> => {
   if (!slack_access_token) return
 
-  const slackConnection = await db.slack.findFirst({
-    where: { slackAccessToken: slack_access_token },
-    include: { connections: true },
-  })
-
-  if (!slackConnection) {
-    await db.slack.create({
-      data: {
-        userId: user_id,
-        appId: app_id,
-        authedUserId: authed_user_id,
-        authedUserToken: authed_user_token,
-        slackAccessToken: slack_access_token,
-        botUserId: bot_user_id,
-        teamId: team_id,
-        teamName: team_name,
-        connections: {
-          create: { userId: user_id, type: 'Slack' },
-        },
-      },
+  try {
+    const slackConnection = await db.slack.findFirst({
+      where: { slackAccessToken: slack_access_token },
+      include: { connections: true },
     })
+
+    if (!slackConnection) {
+      await db.slack.create({
+        data: {
+          userId: user_id,
+          appId: app_id,
+          authedUserId: authed_user_id,
+          authedUserToken: authed_user_token,
+          slackAccessToken: slack_access_token,
+          botUserId: bot_user_id,
+          teamId: team_id,
+          teamName: team_name,
+          connections: {
+            create: { userId: user_id, type: 'Slack' },
+          },
+        },
+      })
+    }
+  } catch (error) {
+    console.error('[SLACK_CONNECT_DB_ERROR]', error)
   }
 }
 
 export const getSlackConnection = async () => {
-  const user = await currentUser()
+  const user = await getCurrentUser()
   if (user) {
-    return await db.slack.findFirst({
-      where: { userId: user.id },
-    })
+    try {
+      return await db.slack.findFirst({
+        where: { userId: user.id },
+      })
+    } catch (error) {
+      console.error('[SLACK_GET_DB_ERROR]', error)
+      return null
+    }
   }
   return null
 }

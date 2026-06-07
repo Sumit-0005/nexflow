@@ -1,6 +1,6 @@
-# Fuzzie 🔗
+# Nexflow 🔗
 
-**Fuzzie** is a full-stack SaaS automation platform that lets users connect their favorite services — Google Drive, Discord, Slack, and Notion — and build custom workflows using a visual drag-and-drop editor. Think of it as a lightweight Zapier built with the modern Next.js stack.
+**Nexflow** is a full-stack SaaS automation platform that lets users connect their favorite services — Google Drive, Discord, Slack, and Notion — and build custom workflows using a visual drag-and-drop editor. Think of it as a lightweight Zapier built with the modern Next.js stack.
 
 ---
 
@@ -51,8 +51,8 @@
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/fuzzie.git
-   cd fuzzie
+git clone https://github.com/your-username/nexflow.git
+cd nexflow
    ```
 
 2. **Install dependencies**
@@ -209,7 +209,7 @@ bun lint      # Run ESLint
 
 ## 🚢 Deployment
 
-The easiest way to deploy Fuzzie is on [Vercel](https://vercel.com):
+The easiest way to deploy Nexflow is on [Vercel](https://vercel.com):
 
 1. Push your repository to GitHub
 2. Import it on Vercel

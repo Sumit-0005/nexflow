@@ -1,6 +1,6 @@
 import React from 'react'
 import Stripe from 'stripe'
-import { currentUser } from '@clerk/nextjs'
+import { getCurrentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
 import BillingDashboard from './_components/billing-dashboard'
 
@@ -19,22 +19,26 @@ const Billing = async (props: Props) => {
     })
 
     const session = await stripe.checkout.sessions.listLineItems(session_id)
-    const user = await currentUser()
+    const user = await getCurrentUser()
     if (user) {
-      await db.user.update({
-        where: {
-          clerkId: user.id,
-        },
-        data: {
-          tier: session.data[0].description,
-          credits:
-            session.data[0].description == 'Unlimited'
-              ? 'Unlimited'
-              : session.data[0].description == 'Pro'
-              ? '100'
-              : '10',
-        },
-      })
+      try {
+        await db.user.update({
+          where: {
+            clerkId: user.id,
+          },
+          data: {
+            tier: session.data[0].description,
+            credits:
+              session.data[0].description == 'Unlimited'
+                ? 'Unlimited'
+                : session.data[0].description == 'Pro'
+                ? '100'
+                : '10',
+          },
+        })
+      } catch (error) {
+        console.error('[BILLING_UPDATE_DB_ERROR]', error)
+      }
     }
   }
 

@@ -11,14 +11,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { UserButton } from '@clerk/nextjs'
 import { useBilling } from '@/providers/billing-provider'
 import { onPaymentDetails } from '@/app/(main)/(pages)/billing/_actions/payment-connecetions'
+import { ErrorBoundary } from '@/components/global/error-boundary'
 
 type Props = {}
 
+const BYPASS =
+  typeof process !== 'undefined' &&
+  process.env.NEXT_PUBLIC_CLERK_BYPASS === 'true'
+
 const InfoBar = (props: Props) => {
   const { credits, tier, setCredits, setTier } = useBilling()
+  const [UserButtonCmp, setUserButtonCmp] = React.useState<React.ReactNode>(null)
 
   const onGetPayment = async () => {
     const response = await onPaymentDetails()
@@ -30,6 +35,16 @@ const InfoBar = (props: Props) => {
 
   useEffect(() => {
     onGetPayment()
+    if (!BYPASS) {
+      import('@clerk/nextjs')
+        .then((clerk) => {
+          const UserButton = clerk.UserButton
+          setUserButtonCmp(<UserButton />)
+        })
+        .catch(() => {
+          console.log('[INFOBAR] Clerk not available - skipping UserButton')
+        })
+    }
   }, [])
 
   return (
@@ -71,7 +86,7 @@ const InfoBar = (props: Props) => {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <UserButton />
+      <ErrorBoundary>{UserButtonCmp}</ErrorBoundary>
     </div>
   )
 }

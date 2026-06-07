@@ -84,7 +84,7 @@ const ActionButton = ({
       )
 
       if (response) {
-        toast.message(response)
+        toast.message(typeof response === 'string' ? response : String(response))
       }
     }
     if (currentService === 'Slack') {
@@ -97,7 +97,7 @@ const ActionButton = ({
       )
 
       if (response) {
-        toast.message(response)
+        toast.message(typeof response === 'string' ? response : String(response))
       }
     }
 
@@ -112,7 +112,7 @@ const ActionButton = ({
       )
 
       if (response) {
-        toast.message(response)
+        toast.message(typeof response === 'string' ? response : String(response))
       }
     }
   }, [nodeConnection, channels])

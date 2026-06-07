@@ -2,15 +2,20 @@ import ProfileForm from '@/components/forms/profile-form'
 import React from 'react'
 import ProfilePicture from './_components/profile-picture'
 import { db } from '@/lib/db'
-import { currentUser } from '@clerk/nextjs'
+import { getCurrentUser } from '@/lib/auth'
 
 type Props = {}
 
 const Settings = async (props: Props) => {
-  const authUser = await currentUser()
+  const authUser = await getCurrentUser()
   if (!authUser) return null
 
-  const user = await db.user.findUnique({ where: { clerkId: authUser.id } })
+  let user = null
+  try {
+    user = await db.user.findUnique({ where: { clerkId: authUser.id } })
+  } catch (error) {
+    console.error('[SETTINGS_DB_ERROR]', error)
+  }
   const removeProfileImage = async () => {
     'use server'
     const response = await db.user.update({
