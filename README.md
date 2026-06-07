@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="images/logo.png" alt="Nexflow Logo" width="80" />
-
 # Nexflow
 
 **Visual SaaS Workflow Automation — connect your apps, automate your work.**
@@ -19,26 +17,6 @@
 ## What is Nexflow?
 
 Nexflow is a **full-stack SaaS automation platform** that lets you visually connect your favourite apps — Google Drive, Discord, Slack, and Notion — and build powerful multi-step workflows using a drag-and-drop editor. Think of it as a lightweight Zapier built with the modern Next.js 14 App Router stack.
-
----
-
-## Screenshots
-
-<div align="center">
-
-### Landing Page
-<img src="images/landing.png" alt="Nexflow Landing Page" width="100%" />
-
-### Workflow Editor
-<img src="images/editor.png" alt="Visual Workflow Editor powered by React Flow" width="100%" />
-
-### Connections Dashboard
-<img src="images/connections.png" alt="Service Connections — Google Drive, Discord, Slack, Notion" width="100%" />
-
-### Billing & Credits
-<img src="images/billing.png" alt="Stripe-powered Billing & Credits System" width="100%" />
-
-</div>
 
 ---
 
