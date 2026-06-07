@@ -300,8 +300,3 @@ The recommended deployment target is [Vercel](https://vercel.com):
 | `Domains, protocols and ports must match` | OAuth redirect mismatch | Use `http://localhost:3000` in dev (already configured) |
 | Google Drive API fails | Empty `GOOGLE_CLIENT_ID` or `GOOGLE_CLIENT_SECRET` | Set both values in `.env.local` |
 
----
-
-## 📄 License
-
-This project is private. All rights reserved © Sumit-0005.
